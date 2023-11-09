@@ -7,7 +7,8 @@ from PySide6.QtWidgets import (QGraphicsView,
                                 QGraphicsLineItem,
                                 QGraphicsTextItem,
                                 QGraphicsPathItem,
-                                QGraphicsRectItem
+                                QGraphicsRectItem,
+                                QGraphicsEllipseItem
                                 )
 from PySide6.QtGui import QPainter, QPen, QBrush, QColor, QFont, QPainterPath
 from PySide6.QtCore import QRectF, Qt
@@ -25,36 +26,35 @@ import sys
         painter.drawEllipse(-30,-30,50,50)
 """
 
-class Motor(QGraphicsItem):
+class Motor(QGraphicsEllipseItem):
     def __init__(self):
         super().__init__()
+        self.setRect(-25,-25,50,50)
+        self.penWidth = 1
 
     def boundingRect(self):
-        penWidth = 1
-        return QRectF(-15 - penWidth/2, -15 - penWidth/2, 30+penWidth, 30+penWidth)
+        #return QRectF(-15 - penWidth/2, -15 - penWidth/2, 30+penWidth, 30+penWidth)
+        rect = super().boundingRect()
+        
+        return QRectF(rect.x() - self.penWidth / 2, rect.y() - self.penWidth / 2, rect.width() + self.penWidth, rect.height() + self.penWidth)
 
     def paint(self,painter,option,widget):
+        super().paint(painter, option, widget)  
         pen = QPen(QColor(0,0,0), 1)
         brush = QBrush(QColor(0,255,0))
         painter.setPen(pen)
-        """path = QPainterPath()
-        path.moveTo(0,0)
-        path.arcTo(0, 0, 30, 30, 0, 360)
-        arch_item = QGraphicsPathItem(path)
-        arch_item.setPen(pen)
-        """
-        painter.drawEllipse(-25,-25,50,50)
+        painter.setBrush(brush)
+        #painter.drawEllipse(-25,-25,50,50)
         #Configurar a fonte
         font = QFont("Arial",12)
         painter.setFont(font)
         painter.setPen(QColor(0, 0, 0))
-        painter.drawText(-6,3,"M")
+        painter.drawText(-6,3, "M")
 
 
 class Tomada(QGraphicsItem):
     def __init__(self):
         super().__init__()
-        self.setFlag(QGraphicsItem.ItemIsSelectable, True)
 
     def boundingRect(self):
         penWidth =  penWidth = 1

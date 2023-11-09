@@ -13,6 +13,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.MyView.setScene(self.MainScene)
 
     def desenhar(self):
+        self.MainScene.clear()
         if self.tipoCarga_comboBox.currentText() == "Motor" and self.tipoQuadro_comboBox.currentText() == "Quadro Preenchido":
             M1 = Motor()
             M1.setPos(0,200)
