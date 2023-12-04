@@ -1,0 +1,49 @@
+import ezdxf
+from PySide6.QtWidgets import QApplication, QGraphicsScene, QGraphicsView, QGraphicsEllipseItem, QPushButton, QVBoxLayout, QWidget
+
+class DrawingApp(QWidget):
+    def __init__(self):
+        super(DrawingApp, self).__init__()
+
+        self.scene = QGraphicsScene()
+        self.view = QGraphicsView(self.scene)
+
+        self.button_draw_circle = QPushButton("Desenhar Círculo")
+        self.button_save_dxf = QPushButton("Salvar como DXF")
+
+        layout = QVBoxLayout(self)
+        layout.addWidget(self.view)
+        layout.addWidget(self.button_draw_circle)
+        layout.addWidget(self.button_save_dxf)
+
+        self.button_draw_circle.clicked.connect(self.draw_circle)
+        self.button_save_dxf.clicked.connect(self.save_as_dxf)
+
+        self.circle_item = None  # Para armazenar a referência ao item de círculo
+
+    def draw_circle(self):
+        # Adiciona um círculo à cena
+        self.circle_item = QGraphicsEllipseItem(20, 20, 60, 60)
+        self.scene.addItem(self.circle_item)
+
+    def save_as_dxf(self):
+        if self.circle_item is not None:
+            # Cria um novo desenho DXF
+            dwg = ezdxf.new()
+            msp = dwg.modelspace()
+
+            # Obtém informações do círculo
+            center = self.circle_item.rect().center()
+            radius = self.circle_item.rect().width() / 2
+
+            # Adiciona o círculo ao desenho DXF
+            msp.add_circle(center=(center.x(), center.y()), radius=radius)
+
+            # Salva o desenho como DXF
+            dwg.saveas('drawer2.dxf')
+
+if __name__ == "__main__":
+    app = QApplication([])
+    main_app = DrawingApp()
+    main_app.show()
+    app.exec()
