@@ -1,14 +1,20 @@
 import ezdxf
-from PySide6.QtWidgets import QApplication, QGraphicsScene, QGraphicsView, QGraphicsEllipseItem
+from PySide6.QtWidgets import QApplication, QGraphicsScene, QGraphicsView, QGraphicsEllipseItem, QPushButton, QMainWindow, QVBoxLayout
 from PySide6.QtCore import Qt
-
+from math import cos, sin, radians
 # Crie uma aplicação Qt
 app = QApplication([])
+window = QMainWindow()
+layout = QVBoxLayout()
 
 # Crie uma cena e uma visão
 scene = QGraphicsScene()
 view = QGraphicsView(scene)
-
+botao1 = QPushButton("Salvar desenho")
+layout.addWidget(view)
+layout.addWidget(botao1)
+window.setLayout(layout)
+window.show()
 # Adicione uma elipse à cena
 ellipse_item = QGraphicsEllipseItem(0, 0, 100, 50)
 ellipse_item.setPos(50, 50)
@@ -32,19 +38,20 @@ minor_radius = ellipse_rect.height() / 2
 # Adicione a elipse ao desenho DXF usando linhas de arco
 msp.add_lwpolyline(
     points=[
-        (center[0] + major_radius * cos(theta), center[1] + minor_radius * sin(theta))
+        (center.x() + major_radius * cos(theta), center.y() + minor_radius * sin(theta))
         for theta in range(0, 360, 5)  # Use um intervalo pequeno para obter uma curva suave
     ],
-    is_closed=True,
+    close=True,
     dxfattribs={'layer': 'ELLIPSES'}
 )
 
 # Salve o desenho DXF
-dwg.saveas('ellipse.dxf')
+dwg.saveas('ellipse2.dxf')
+
 
 # Exiba a visão
 view.show()
 
 # Execute o loop de eventos do aplicativo
-app.exec_()
+app.exec()
 
